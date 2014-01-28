@@ -2,7 +2,7 @@
 
 pkgname=go-qml-git
 pkgver=20140128
-pkgrel=1
+pkgrel=2
 pkgdesc="QML support for the Go language"
 arch=('i686' 'x86_64')
 url="https://github.com/niemeyer/qml"
@@ -13,7 +13,7 @@ options=('!strip' '!emptydirs')
 _gourl=github.com/niemeyer/qml
 
 build() {
-  GOPATH="$srcdir" go get -u ${_gourl}/...
+  GOPATH="$srcdir" go get -u ${_gourl}
 }
 
 #check() {
@@ -26,23 +26,28 @@ package() {
   mkdir -p "$pkgdir/usr/bin"
 
   # install binaries
-  install -p -m755 "$srcdir/bin/snapweb" "$pkgdir/usr/bin/qml_go_demo_snapweb"
-
-  examples=('customtype' 'imgprovider' 'painting' 'particle' 'qmlscene' 'reparent')
+  examples=('customtype' 'imgprovider' 'painting' 'qmlscene' 'reparent' 'snapweb')
   for demo_name in ${examples[@]}; do
     cat<<EOF > ${pkgdir}/usr/bin/qml_go_demo_$demo_name
 #!/usr/bin/bash
 
 cd $GOPATH/src/$_gourl/examples/$demo_name
-$GOPATH/bin/$demo_name
+go run $demo_name.go
 EOF
   done
+
+  cat<<EOF > ${pkgdir}/usr/bin/qml_go_demo_particle
+#!/usr/bin/bash
+
+cd $GOPATH/src/$_gourl/examples/particle
+go run main.go
+EOF
 
   cat<<EOF > ${pkgdir}/usr/bin/qml_go_demo_delegate
 #!/usr/bin/bash
 
 cd $GOPATH/src/$_gourl/examples/modelview/delegate
-$GOPATH/bin/delegate
+go run delegate.go
 EOF
 
   chmod a+x ${pkgdir}/usr/bin/*
