@@ -1,5 +1,6 @@
 pkg/
 src/
 komanda/
+the_platinum_searcher/
 *.tar.gz
 *.tar.xz
